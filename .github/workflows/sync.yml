@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        space_name: [company-pet-policy, about-mls] # List your Hugging Face space names here
+        space_name: [company-pet-policy, about-mls, shakespeare] # List your Hugging Face space names here
 
     steps:
       - name: Checkout repository
