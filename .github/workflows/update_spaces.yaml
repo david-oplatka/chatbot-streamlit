@@ -12,7 +12,7 @@ jobs:
         space_name: [company-pet-policy, about-mls, shakespeare]  # List your Hugging Face space names here
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Configure Git
         run: |
