@@ -1,0 +1,48 @@
+name: Update Spaces
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      # Perform specific actions for syncing files
+      - name: Sync changed files to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          # Check for changed files since last commit
+          changed_files=$(git diff --name-only HEAD^)
+
+          # Iterate through changed files and stage them
+          for file in $changed_files; do
+            git add $file
+          done
+
+          # Commit changes if there are any
+          if [[ -n "$changed_files" ]]; then
+            git commit -m "Update changed files"
+            git push --force origin main
+          else
+            echo "No changes detected."
+          fi
+
+          # List of Hugging Face Spaces (child repos)
+          spaces=("company-pet-policy" "about-mls" "shakespeare")
+
+          # Push changes to each Hugging Face Space
+          for space_name in "${spaces[@]}"; do
+            git remote add space "https://huggingface.co/spaces/${{ github.repository_owner }}/${space_name}.git"
+            git push --force space main
+          done
