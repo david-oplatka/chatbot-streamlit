@@ -1,46 +1,35 @@
 name: Update Spaces
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]  # Update this to your branch name if different
 
 jobs:
-  sync-to-hub:
+  update-spaces:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        space_name: [company-pet-policy, about-mls, shakespeare]  # List your Hugging Face space names here
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          lfs: true
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Perform specific actions for syncing files
-      - name: Sync changed files to Hugging Face
+      - name: Configure Git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Update Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+          git remote set-url origin https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
+          git pull --rebase origin main  # Pull with rebase to avoid merge conflicts
 
-          # Check for changed files since last commit
-          changed_files=$(git diff --name-only HEAD^)
-
-          # Iterate through changed files and stage them
-          for file in $changed_files; do
-            git add $file
-          done
-
-          # Commit changes if there are any
-          if [[ -n "$changed_files" ]]; then
-            git commit -m "Update changed files"
-            git push --force origin main
-          else
-            echo "No changes detected."
+          # Check for any unstaged changes (potential conflicts)
+          if [ $(git status --porcelain | grep '^##') ]; then
+            echo "Error: Unstaged changes detected in Space. Resolve conflicts and try again."
+            exit 1
           fi
 
-          # List of Hugging Face Spaces (child repos)
-          spaces=("company-pet-policy" "about-mls" "shakespeare")
-
-          # Push changes to each Hugging Face Space
-          for space_name in "${spaces[@]}"; do
-            git remote add space "https://huggingface.co/spaces/${{ github.repository_owner }}/${space_name}.git"
-            git push --force space main
-          done
+          git push origin main
