@@ -28,5 +28,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add space https://huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
-          git push --force https://huggingface.co/spaces/david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }} main
+          git remote add space https://david-oplatka:$HF-TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
+          git push --force space main
