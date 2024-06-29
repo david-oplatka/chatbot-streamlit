@@ -1,7 +1,8 @@
-name: Add New Space
-
+name: Update Space
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   sync-to-hub:
@@ -27,4 +28,4 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git remote set-url origin https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
-          git push --force origin main
+          git push origin main
