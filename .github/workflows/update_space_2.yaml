@@ -1,7 +1,9 @@
 name: Update Space
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      main
 
 jobs:
   sync-to-hub:
