@@ -33,14 +33,19 @@ jobs:
         run: |
           huggingface-cli login --token $HF_TOKEN
 
+      - name: Add Hugging Face Space as remote
+        run: |
+          git remote add space_${{ matrix.space_name }} https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
+          git config --add remote.space_${{ matrix.space_name }}.oauth_token $HF_TOKEN
+
       - name: Fetch changes from Hugging Face space
-        run: git fetch https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
+        run: git fetch space_${{ matrix.space_name }}
         
       - name: Push only changed files
         run: |
           for file in $(git diff --name-only HEAD~1 HEAD); do
-            git checkout https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git/main -- $file
+            git checkout space_${{ matrix.space_name }}/main -- $file
             git add $file
             git commit -m "Update $file in ${{ matrix.space_name }}"
-            git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
+            git push space_${{ matrix.space_name }} HEAD:main
           done
