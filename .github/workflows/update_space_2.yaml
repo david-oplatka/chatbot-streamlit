@@ -33,10 +33,9 @@ jobs:
         run: |
           huggingface-cli login --token $HF_TOKEN
 
-      - name: Add remote and configure token
+      - name: Set Hugging Face Space remote URL
         run: |
-          git remote add space_${{ matrix.space_name }} https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
-
+          git remote set-url space_${{ matrix.space_name }} https://david-oplatka:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
       - name: Fetch changes from Hugging Face space
         run: git fetch space_${{ matrix.space_name }}
         
