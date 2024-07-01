@@ -19,9 +19,12 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Configure SSH known hosts
-        env:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure SSH known hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan hf.co >> ~/.ssh/known_hosts
