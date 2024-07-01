@@ -40,14 +40,20 @@ jobs:
 
       - name: Add Hugging Face Space as remote (loop through each space)
         run: |
-          git remote add ${{ steps.get_space_name.outputs.value }} https://$david-oplatka/$${{ steps.get_space_name.outputs.value }}.git
-          git config --add remote.$ ${{ steps.get_space_name.outputs.value }}.oauth_token ${{ secrets.HF_TOKEN }}
+          git remote add ${{ steps.get_space_name.outputs.value }} https://huggingface.co/spaces/david-oplatka/${{ steps.get_space_name.outputs.value }}.git
+          git config --add remote.${{ steps.get_space_name.outputs.value }}.oauth_token ${{ secrets.HF_TOKEN }}
+
 
       - name: Get changed files
         id: changed_files
         run: |
           git diff --name-only origin/main HEAD
-
+      
       - name: Push only changed files (loop through each space)
         run: |
-          git push ${{ steps.get_space_name.outputs.value }} --prune $(echo ${{ steps.changed_files.outputs.value }})
+          changed_files=$(echo "${{ steps.changed_files.outputs.value }}")
+          for file in $changed_files; do
+            git add $file
+            git commit -m "Updating $file"
+            git push ${{ steps.get_space_name.outputs.value }} main
+          done
