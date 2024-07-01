@@ -74,8 +74,8 @@ class VectaraQuery():
                     'numResults': 50,
                     'corpusKey': corpora_key_list,
                     'context_config': {
-                        'sentences_before': 3,
-                        'sentences_after': 3,
+                        'sentences_before': 2,
+                        'sentences_after': 2,
                         'start_tag': "%START_SNIPPET%",
                         'end_tag': "%END_SNIPPET%",
                     },
