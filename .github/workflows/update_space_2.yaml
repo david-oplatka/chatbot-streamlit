@@ -34,11 +34,10 @@ jobs:
           huggingface-cli login --token $HF_TOKEN
 
       - name: Set Hugging Face Space remote URL
-        env:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           REMOTE_NAME=space_${{ matrix.space_name }}
-          REMOTE_URL= git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}
+          REMOTE_URL=git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
+          echo "Adding remote: $REMOTE_NAME with URL: $REMOTE_URL"
           if git remote get-url $REMOTE_NAME; then
             git remote set-url $REMOTE_NAME $REMOTE_URL
           else
