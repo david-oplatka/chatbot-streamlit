@@ -38,7 +38,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           REMOTE_NAME=space_${{ matrix.space_name }}
-          REMOTE_URL= git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
+          REMOTE_URL= git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}
           if git remote get-url $REMOTE_NAME; then
             git remote set-url $REMOTE_NAME $REMOTE_URL
           else
