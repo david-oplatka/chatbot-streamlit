@@ -66,5 +66,5 @@ jobs:
             git checkout space_${{ matrix.space_name }}/main -- $file
             git add $file
             git commit -m "Update $file in ${{ matrix.space_name }}"
-            git push git@huggingface.co:spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
+            git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
           done
