@@ -38,7 +38,7 @@ jobs:
         
       - name: Push only changed files
         run: |
-          for file in (git diff --name-only HEAD~1 HEAD); do
+          for file in $(git diff --name-only HEAD~1 HEAD); do
             git checkout https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git/main -- $file
             git add $file
             git commit -m "Update $file in ${{ matrix.space_name }}"
