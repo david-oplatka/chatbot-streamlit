@@ -41,6 +41,10 @@ jobs:
         run: |
           git diff --name-only HEAD~1 HEAD || true
 
+      - name: Show changed files
+        run: |
+          echo "Files to push: ${{ steps.changed_files.outputs.value }}"
+
       - name: Push only changed files
         run: |
           changed_files=$(echo "${{ steps.changed_files.outputs.value }}")
