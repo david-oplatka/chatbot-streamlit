@@ -21,7 +21,7 @@ jobs:
 
       - name: Configure SSH known hosts
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan hf.co >> ~/.ssh/known_hosts
@@ -35,12 +35,12 @@ jobs:
         run: pip install huggingface_hub
 
       - name: Login to Hugging Face (use secret token)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           huggingface-cli login --token $HF_TOKEN
 
       - name: Set Hugging Face Space remote URL
-        env:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           REMOTE_NAME=space_${{ matrix.space_name }}
           REMOTE_URL=git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
