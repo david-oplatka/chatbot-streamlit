@@ -28,14 +28,13 @@ jobs:
         id: changed_files
         run: |
           git fetch origin
-          updated_files=$(git diff --name-only HEAD~1 HEAD || true)
-          echo "${updated_files}"
+          git diff --name-only HEAD~1 HEAD || true
 
       - name: Push only changed files (loop through each space)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          changed_files=$(echo "${{ steps.changed_files.outputs.value }}")
+          changed_files="${{ steps.changed_files.outputs.value }}"
           for file in $changed_files; do
             git add $file
             git commit -m "Updating $file"
