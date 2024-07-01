@@ -34,7 +34,7 @@ jobs:
           huggingface-cli login --token $HF_TOKEN
 
       - name: Fetch changes from Hugging Face space
-        run: git fetch space_${{ matrix.space_name }}
+        run: git fetch ${{ matrix.space_name }}
 
       - name: Diff changed files
         id: diff_files
@@ -46,8 +46,8 @@ jobs:
         run: |
           changed_files=$(echo "${{ steps.diff_files.outputs.value }}")
           for file in $changed_files; do
-            git checkout space_${{ matrix.space_name }}/main -- $file
+            git checkout ${{ matrix.space_name }}/main -- $file
             git add $file
             git commit -m "Update $file in ${{ matrix.space_name }}"
-            git push space_${{ matrix.space_name }} HEAD:main
+            git push ${{ matrix.space_name }} HEAD:main
           done
