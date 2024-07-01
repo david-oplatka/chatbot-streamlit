@@ -44,6 +44,9 @@ jobs:
           else
             git remote add $REMOTE_NAME $REMOTE_URL
           fi
+
+      - name: Show Remote connections
+        run: git remote -v
       
       - name: Fetch changes from Hugging Face space
         run: git fetch space_${{ matrix.space_name }}
