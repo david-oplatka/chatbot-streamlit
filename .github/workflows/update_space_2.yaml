@@ -35,6 +35,10 @@ jobs:
           echo "Changed files:"
           echo "${{ steps.changed_files.outputs.value }}"
 
+      - name: Check Git Status
+        run: |
+          git status
+          
       - name: Push changed files to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Your Hugging Face token secret
