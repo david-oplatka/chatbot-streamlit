@@ -28,7 +28,7 @@ jobs:
         id: changed_files
         run: |
           git fetch origin
-          changed_files=$(git diff --name-only HEAD~1 HEAD)
+          updated_files=$(git diff --name-only HEAD~1 HEAD || true)
           echo "${changed_files}"
 
       - name: Push only changed files (loop through each space)
