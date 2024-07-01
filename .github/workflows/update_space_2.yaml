@@ -36,25 +36,11 @@ jobs:
       - name: Fetch changes from Hugging Face space
         run: git fetch https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
         
-      - name: Get changed files
-        id: changed_files
-        run: |
-          git diff --name-only HEAD~1 HEAD || true
-
-      - name: Show changed files
-        run: |
-          echo "Files to push: ${{ steps.changed_files.outputs.value }}"
-
       - name: Push only changed files
         run: |
-          changed_files=$(echo "${{ steps.changed_files.outputs.value }}")
-          if [ -n "$changed_files" ]; then
-            for file in $changed_files; do
-              git checkout https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git/main -- $file
-              git add $file
-              git commit -m "Update $file in ${{ matrix.space_name }}"
-              git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
-            done
-          else
-            echo "No changed files to push."
-          fi
+          for file in (git diff --name-only HEAD~1 HEAD); do
+            git checkout https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git/main -- $file
+            git add $file
+            git commit -m "Update $file in ${{ matrix.space_name }}"
+            git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
+          done
