@@ -3,7 +3,7 @@ name: Update Space
 on:
   push:
     branches:
-      main
+      - main
 
 jobs:
   sync-to-hub:
@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         space_name: [company-pet-policy, about-mls, shakespeare]  # List your Hugging Face space names here
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,30 +31,21 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          huggingface-cli login --token ${{ secrets.HF_TOKEN }}
-          
-      - name: Get Space Name
-        id: get_space_name
-        run: echo ${{ matrix.space_name }}
-
-      - name: Add Hugging Face Space as remote (loop through each space)
-        run: |
-          git remote add ${{ steps.get_space_name.outputs.value }} https://huggingface.co/spaces/david-oplatka/${{ steps.get_space_name.outputs.value }}.git
-          git config --add remote.${{ steps.get_space_name.outputs.value }}.oauth_token ${{ secrets.HF_TOKEN }}
-
+          huggingface-cli login --token $HF_TOKEN
 
       - name: Get changed files
         id: changed_files
         run: |
+          git fetch origin
           git diff --name-only origin/main HEAD
-      
+
       - name: Push only changed files (loop through each space)
         run: |
           changed_files=$(echo "${{ steps.changed_files.outputs.value }}")
           for file in $changed_files; do
             git add $file
             git commit -m "Updating $file"
-            git push ${{ steps.get_space_name.outputs.value }} main
+            git remote add ${{ matrix.space_name }} https://huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
+            git config --add remote.${{ matrix.space_name }}.oauth_token ${{ secrets.HF_TOKEN }}
+            git push ${{ matrix.space_name }} main
           done
