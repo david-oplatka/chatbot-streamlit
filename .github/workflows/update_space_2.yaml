@@ -41,4 +41,4 @@ jobs:
         run: |
           changed_files="${{ steps.changed_files.outputs.value }}"
           echo "Files to push: $changed_files"
-          git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD~1:main
+          git push --force https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
