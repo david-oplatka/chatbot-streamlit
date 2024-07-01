@@ -44,5 +44,7 @@ jobs:
           for file in $changed_files; do
             git add $file
             git commit -m "Updating $file"
-            git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ github.event.repository.name }}.git main
+            git remote add ${{ matrix.space_name }} <https://huggingface.co/spaces/david-oplatka/$>{{ matrix.space_name }}.git
+            git config --add remote.${{ matrix.space_name }}.oauth_token ${{ secrets.HF_TOKEN }}
+            git push ${{ matrix.space_name }} main
           done
