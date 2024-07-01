@@ -18,7 +18,14 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-          
+
+      - name: Configure SSH known hosts
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan hf.co >> ~/.ssh/known_hosts
+      
       - name: Configure Git
         run: |
           git config --global user.email "actions@github.com"
@@ -28,8 +35,6 @@ jobs:
         run: pip install huggingface_hub
 
       - name: Login to Hugging Face (use secret token)
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           huggingface-cli login --token $HF_TOKEN
 
