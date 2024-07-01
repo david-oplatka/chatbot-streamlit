@@ -23,22 +23,26 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-
-      - name: Get and show changed files
+          
+      - name: Get changed files
         id: changed_files
         run: |
           git fetch origin
-          git diff --name-only HEAD~1 HEAD || true
+          echo "::set-output name=value::$(git diff --name-only HEAD~1 HEAD || true)"
 
-      - name: Push only changed files (loop through each space)
+      - name: Show changed files
+        run: |
+          echo "Changed files:"
+          echo "${{ steps.changed_files.outputs.value }}"
+
+      - name: Push changed files to Hugging Face
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Your Hugging Face token secret
         run: |
           changed_files="${{ steps.changed_files.outputs.value }}"
+          echo "Files to push: $changed_files"
           for file in $changed_files; do
             git add $file
             git commit -m "Updating $file"
-            git remote add ${{ matrix.space_name }} https://huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git
-            git config --add remote.${{ matrix.space_name }}.oauth_token ${{ secrets.HF_TOKEN }}
-            git push ${{ matrix.space_name }} main
+            git push https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ github.event.repository.name }}.git main
           done
