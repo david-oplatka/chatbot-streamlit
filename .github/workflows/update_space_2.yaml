@@ -1,4 +1,4 @@
-name: Update Space
+name: Update Hugging Face Space
 
 on:
   push:
@@ -23,22 +23,31 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          
-      - name: Get changed files
-        id: changed_files
-        run: |
-          git fetch origin
-          echo "::set-output name=value::$(git diff --name-only HEAD~1 HEAD || true)"
 
-      - name: Show changed files
-        run: |
-          echo "Changed files:"
-          echo "${{ steps.changed_files.outputs.value }}"
-          
-      - name: Push changed files to Hugging Face
+      - name: Install huggingface_hub
+        run: pip install huggingface_hub
+
+      - name: Login to Hugging Face (use secret token)
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Your Hugging Face token secret
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          changed_files="${{ steps.changed_files.outputs.value }}"
-          echo "Files to push: $changed_files"
-          git push --force https://david-oplatka:$HF_TOKEN@huggingface.co/spaces/david-oplatka/${{ matrix.space_name }}.git HEAD:main
+          huggingface-cli login --token $HF_TOKEN
+
+      - name: Fetch changes from Hugging Face space
+        run: git fetch space_${{ matrix.space_name }}
+
+      - name: Diff changed files
+        id: diff_files
+        run: |
+          git diff --name-only HEAD~1 HEAD || true
+
+      - name: Push only changed files to Hugging Face space
+        if: steps.diff_files.outputs.value != ''
+        run: |
+          changed_files=$(echo "${{ steps.diff_files.outputs.value }}")
+          for file in $changed_files; do
+            git checkout space_${{ matrix.space_name }}/main -- $file
+            git add $file
+            git commit -m "Update $file in ${{ matrix.space_name }}"
+            git push space_${{ matrix.space_name }} HEAD:main
+          done
