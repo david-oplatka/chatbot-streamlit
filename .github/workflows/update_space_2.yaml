@@ -30,16 +30,22 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan hf.co >> ~/.ssh/known_hosts
 
+      - name: Create Custom Temporary Directory under RUNNER_TEMP
+        run: |
+          mkdir -p $RUNNER_TEMP/custom-temp-directory
+          cd $RUNNER_TEMP/custom-temp-directory
+          mkdir -p tmp-folder-${{ matrix.space_name }}
+
       - name: Clone Target Hugging Face Repository
         run: |
-          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git tmp-folder-${{ matrix.space_name }}
-          cd tmp-folder-${{ matrix.space_name }}
+          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
+          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git .
           git checkout main
 
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.git' ./chatbot-streamlit/ ./tmp-folder-${{ matrix.space_name }}/
-          cd tmp-folder-${{ matrix.space_name }}
+          rsync -av --exclude '.git' $GITHUB_WORKSPACE/chatbot-streamlit/ $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add .
@@ -49,5 +55,5 @@ jobs:
         env:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
-          cd tmp-folder-${{ matrix.space_name }}
+          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git push https://huggingface.co/your-hf-username/${{ matrix.space_name }}.git main
