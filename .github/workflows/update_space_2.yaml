@@ -53,7 +53,7 @@ jobs:
       
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsynch -av --exclude '.*' $GITHUB_WORKSPACE $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.*' $GITHUB_WORKSPACE $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git status
