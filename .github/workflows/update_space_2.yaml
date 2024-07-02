@@ -71,4 +71,4 @@ jobs:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          git push https://huggingface.co/your-hf-username/${{ matrix.space_name }}.git main
+          git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git main
