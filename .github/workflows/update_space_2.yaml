@@ -44,7 +44,7 @@ jobs:
 
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.git' $GITHUB_WORKSPACE/chatbot-streamlit/ $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          cp -r . $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
