@@ -57,7 +57,7 @@ jobs:
       
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.*' $GITHUB_WORKSPACE $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           git status
           git add -A
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
