@@ -40,15 +40,15 @@ jobs:
           cd $RUNNER_TEMP/custom-temp-directory
           mkdir -p tmp-folder-${{ matrix.space_name }}
 
-      - name: Verify Copied Files
-        run: |
-          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-
       - name: Clone Target Hugging Face Repository
         run: |
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git .
           git checkout main
+
+      - name: Verify Copied Files
+        run: |
+          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
 
       - name: Sync Source Repository with Temporary Folder
         run: |
