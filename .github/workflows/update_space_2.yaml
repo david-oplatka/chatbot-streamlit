@@ -19,6 +19,10 @@ jobs:
         with:
           repository: david-oplatka/chatbot-streamlit
           token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Print Source Directory Contents
+        run: |
+          ls -l
 
       - name: Set up SSH for Hugging Face
         uses: webfactory/ssh-agent@v0.5.3
@@ -35,6 +39,10 @@ jobs:
           mkdir -p $RUNNER_TEMP/custom-temp-directory
           cd $RUNNER_TEMP/custom-temp-directory
           mkdir -p tmp-folder-${{ matrix.space_name }}
+
+      - name: Verify Copied Files
+        run: |
+          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
 
       - name: Clone Target Hugging Face Repository
         run: |
