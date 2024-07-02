@@ -38,8 +38,10 @@ jobs:
 
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.git' ./ ./tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.git' ./chatbot-streamlit/ ./tmp-folder-${{ matrix.space_name }}/
           cd tmp-folder-${{ matrix.space_name }}
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
           git add .
           git commit -m "Sync updates from source repository"
 
