@@ -49,6 +49,7 @@ jobs:
       - name: Verify Copied Files
         run: |
           ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
+          cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
 
       - name: Sync Source Repository with Temporary Folder
         run: |
@@ -56,9 +57,15 @@ jobs:
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add .
-          git commit -m "Sync updates from source repository"
+          git add -A
+          git status
+          git commit -m "Sync updates from source repository" || echo "No changes to commit"
 
+      - name: Print Cloned Directory Contents After Sync
+        run: |
+          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
+          cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
+          
       - name: Push changes to Hugging Face Space
         env:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
