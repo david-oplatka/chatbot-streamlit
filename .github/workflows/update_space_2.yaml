@@ -50,10 +50,14 @@ jobs:
           ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
 
+      - name: Check Working directories
+        run: |
+          ls -lR $GITHUB_WORKSPACE
+          ls -lR $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
       
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.*' $GITHUB_WORKSPACE/chatbot-streamlit/ $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.*' $GITHUB_WORKSPACE $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           git status
           git add -A
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
