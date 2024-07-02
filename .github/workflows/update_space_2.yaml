@@ -38,11 +38,14 @@ jobs:
 
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.git' ./chatbot-streamlit/ ./tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.git' ./ ./tmp-folder-${{ matrix.space_name }}/
           cd tmp-folder-${{ matrix.space_name }}
           git add .
           git commit -m "Sync updates from source repository"
 
       - name: Push changes to Hugging Face Space
+        env:
+          HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
-          git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git main
+          cd tmp-folder-${{ matrix.space_name }}
+          git push https://huggingface.co/your-hf-username/${{ matrix.space_name }}.git main
