@@ -54,7 +54,6 @@ jobs:
 
       - name: Sync Source Repository with Temporary Folder
         run: |
-          cp -r . $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
@@ -72,4 +71,4 @@ jobs:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git main
+          git push -f git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git main
