@@ -44,34 +44,21 @@ jobs:
         run: |
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git .
-          git checkout main
-          git pull origin main
 
       - name: Verify Copied Files
         run: |
           ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
 
-      - name: Get List of Changed Files
-        id: changed-files
-        run: |
-          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          git diff --name-only HEAD^ HEAD > changed-files.txt || echo "No changes found"
-          cat changed-files.txt
-
-      - name: Copy Changed Files to Temporary Directory
-        if: steps.changed-files.outputs.stdout != ''
-        run: |
-          cd $GITHUB_WORKSPACE
-          xargs -I {} cp -f --parents {} $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }} < changed-files.txt
       
       - name: Sync Source Repository with Temporary Folder
         run: |
+          cp -r . $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
           cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add -A
           git status
+          git add -A
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
 
       - name: Print Cloned Directory Contents After Sync
@@ -83,5 +70,4 @@ jobs:
         env:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
-          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git main
+          git push git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
