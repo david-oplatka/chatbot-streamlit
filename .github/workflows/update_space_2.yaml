@@ -52,16 +52,18 @@ jobs:
           ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
           cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
 
-      - name: Identify Changed Files
+      - name: Get List of Changed Files
         id: changed-files
         run: |
-          cd $GITHUB_WORKSPACE
-          git diff --name-only HEAD~1  # Compare with the last commit
+          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
+          git diff --name-only HEAD^ HEAD > changed-files.txt || echo "No changes found"
+          cat changed-files.txt
 
       - name: Copy Changed Files to Temporary Directory
+        if: steps.changed-files.outputs.stdout != ''
         run: |
-          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          xargs -I {} cp -f --parents $GITHUB_WORKSPACE/{} . < <(echo "${{ steps.changed-files.outputs.stdout }}")
+          cd $GITHUB_WORKSPACE
+          xargs -I {} cp -f --parents {} $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }} < changed-files.txt
       
       - name: Sync Source Repository with Temporary Folder
         run: |
