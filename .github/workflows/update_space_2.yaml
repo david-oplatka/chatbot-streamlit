@@ -34,38 +34,30 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan hf.co >> ~/.ssh/known_hosts
 
-      - name: Create Custom Temporary Directory under RUNNER_TEMP
+      - name: Create Custom Temporary Directory for the space under RUNNER_TEMP
         run: |
-          mkdir -p $RUNNER_TEMP/custom-temp-directory
-          cd $RUNNER_TEMP/custom-temp-directory
-          mkdir -p tmp-folder-${{ matrix.space_name }}
+          mkdir -p $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}
 
       - name: Clone and Pull Target Hugging Face Repository
         run: |
-          cd $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git .
-
-      - name: Verify Copied Files
-        run: |
-          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
+          cd $RUNNER_TEMP/spaces/
+          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
 
       - name: Check Working directories
         run: |
           ls -lR $GITHUB_WORKSPACE
-          ls -lR $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          ls -lR $RUNNER_TEMP/spaces
       
       - name: Sync Source Repository with Temporary Folder
         run: |
-          rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/
+          rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}/
           git status
-          git add -A
+          git add -A .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
 
       - name: Print Cloned Directory Contents After Sync
         run: |
-          ls -l $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}
-          cat $RUNNER_TEMP/custom-temp-directory/tmp-folder-${{ matrix.space_name }}/README.md || echo "README.md not found in temporary directory"
+          ls -lR $RUNNER_TEMP/spaces
           
       - name: Push changes to Hugging Face Space
         env:
