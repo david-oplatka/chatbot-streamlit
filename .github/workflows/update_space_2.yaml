@@ -34,10 +34,6 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan hf.co >> ~/.ssh/known_hosts
 
-      - name: Create Custom Temporary Directory for the space under RUNNER_TEMP
-        run: |
-          mkdir -p $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}
-
       - name: Clone and Pull Target Hugging Face Repository
         run: |
           git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git $RUNNER_TEMP/spaces/
