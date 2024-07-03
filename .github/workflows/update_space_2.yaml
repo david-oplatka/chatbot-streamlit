@@ -50,6 +50,7 @@ jobs:
       
       - name: Sync Source Repository with Temporary Folder
         run: |
+          pwd
           rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}/
           git status
           git add -A .
@@ -57,6 +58,7 @@ jobs:
 
       - name: Print Cloned Directory Contents After Sync
         run: |
+          pwd
           ls -lR $RUNNER_TEMP/spaces
           
       - name: Push changes to Hugging Face Space
