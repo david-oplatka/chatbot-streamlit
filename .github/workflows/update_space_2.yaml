@@ -47,8 +47,14 @@ jobs:
           pwd
           sed -i 's/title: "Enter Chatbot Title"/title: "My Title"/g' README.md
           ls -lR
+          echo "git status"
+          pwd
           git status
+          echo "git add"
+          pwd
           git add .
+          echo "git commit"
+          pwd
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
 
       - name: Print Cloned Directory Contents After Sync
