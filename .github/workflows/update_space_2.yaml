@@ -40,18 +40,18 @@ jobs:
 
       - name: Clone and Pull Target Hugging Face Repository
         run: |
-          cd $RUNNER_TEMP/spaces/
-          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git
+          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git $RUNNER_TEMP/spaces/
 
       - name: Check Working directories
         run: |
-          ls -lR $GITHUB_WORKSPACE
-          ls -lR $RUNNER_TEMP/spaces
+          ls -lR /home/runner/
       
       - name: Sync Source Repository with Temporary Folder
         run: |
           pwd
           rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}/
+          cd $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}
+          pwd
           git status
           git add -A .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
