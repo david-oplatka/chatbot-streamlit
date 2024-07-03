@@ -73,5 +73,6 @@ jobs:
         env:
           HF_ACCESS_TOKEN: ${{ secrets.HF_TOKEN }}  # Replace with your actual secret name
         run: |
+          cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
           pwd
           git push origin main
