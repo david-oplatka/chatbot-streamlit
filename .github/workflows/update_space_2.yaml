@@ -25,7 +25,7 @@ jobs:
             space_description: "Ask some basic questions about Shakespeare and his work"
 
           - space_name: test
-            space_title: "Trivia Practice:"
+            space_title: "Trivia Practice"
             space_description: "Practice your trivia skills with Jeopardy questions"
         
 
