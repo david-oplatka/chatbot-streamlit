@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - space_name: company-pet-policy
-            space_title: "Vectara pet policy"
+            space_title: "Vectara Pet Policy"
             space_description: "Ask questions about our unique pet policy"
 
           - space_name: about-mls
