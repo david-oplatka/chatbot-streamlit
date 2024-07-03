@@ -40,9 +40,13 @@ jobs:
           pwd
           ls -lR $GITHUB_WORKSPACE
           rsync -av --exclude '.*' $GITHUB_WORKSPACE/ $RUNNER_TEMP/spaces/${{ matrix.space_name }}/
+
+      - name: commit changes
+        run: |
           cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
           pwd
-          ls -lR /home/runner/work
+          sed -i 's/title: "Enter Chatbot Title"/title: "My Title"/g' README.md
+          ls -lR
           git status
           git add -A .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
