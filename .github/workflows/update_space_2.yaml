@@ -22,7 +22,7 @@ jobs:
 
           - space_name: shakespeare
             space_title: "Shakespeare and His Plays"
-            space_description: "Ask some basic questions about Shakespeare\'s work"
+            space_description: "Ask some basic questions about Shakespeare and his work"
         
 
     steps:
