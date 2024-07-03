@@ -15,10 +15,7 @@ jobs:
 
     steps:
       - name: Checkout Source Repository
-        uses: actions/checkout@v2
-        with:
-          repository: david-oplatka/chatbot-streamlit
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/checkout@v3
           
       - name: Set up SSH for Hugging Face
         uses: webfactory/ssh-agent@v0.5.3
