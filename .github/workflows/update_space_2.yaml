@@ -55,8 +55,8 @@ jobs:
       - name: commit changes
         run: |
           cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
-          sed -i 's/title: "Enter Chatbot Title"/title: ${{ matrix.space_name }}/g' README.md
-          sed -i 's/short_description: "Enter Description Here"/short_description: ${{ matrix.space_name }}/g' README.md
+          sed -i 's/title: "Enter Chatbot Title"/title: ${{ matrix.space_title }}/g' README.md
+          sed -i 's/short_description: "Enter Description Here"/short_description: ${{ matrix.space_description }}/g' README.md
           git add .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
           
