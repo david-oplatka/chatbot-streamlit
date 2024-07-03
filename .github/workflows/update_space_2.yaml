@@ -48,7 +48,7 @@ jobs:
           sed -i 's/title: "Enter Chatbot Title"/title: "My Title"/g' README.md
           ls -lR
           git status
-          git add -A .
+          git add .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
 
       - name: Print Cloned Directory Contents After Sync
