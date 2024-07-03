@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout Source Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3          
           
       - name: Set up SSH for Hugging Face
         uses: webfactory/ssh-agent@v0.5.3
@@ -29,19 +29,20 @@ jobs:
 
       - name: Clone and Pull Target Hugging Face Repository
         run: |
-          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git $RUNNER_TEMP/spaces/
+          git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git $RUNNER_TEMP/spaces/${{ matrix.space_name }}
 
       - name: Check Working directories
         run: |
-          ls -lR /home/runner/work
+          ls -lR /home/runner/work/
       
       - name: Sync Source Repository with Temporary Folder
         run: |
           pwd
           ls -lR $GITHUB_WORKSPACE
-          rsync -av --exclude '.*' $GITHUB_WORKSPACE/* $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}
-          cd $RUNNER_TEMP/spaces/folder-${{ matrix.space_name }}
+          rsync -av --exclude '.*' $GITHUB_WORKSPACE/ $RUNNER_TEMP/spaces/${{ matrix.space_name }}/
+          cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
           pwd
+          ls -lR /home/runner/work
           git status
           git add -A .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
