@@ -35,39 +35,17 @@ jobs:
       - name: Clone and Pull Target Hugging Face Repository
         run: |
           git clone git@hf.co:spaces/david-oplatka/${{ matrix.space_name }}.git $RUNNER_TEMP/spaces/${{ matrix.space_name }}
-
-      - name: Check Working directories
-        run: |
-          ls -l /home/runner/work/
-          ls -lR $GITHUB_WORKSPACE/
-          ls -lR $RUNNER_TEMP/spaces
       
       - name: Sync Source Repository with Temporary Folder
         run: |
-          pwd
-          ls -lR $GITHUB_WORKSPACE
           rsync -av --exclude '.*' $GITHUB_WORKSPACE/ $RUNNER_TEMP/spaces/${{ matrix.space_name }}/
 
       - name: commit changes
         run: |
           cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
-          pwd
-          sed -i 's/title: "Enter Chatbot Title"/title: "My Title"/g' README.md
-          ls -lR
-          echo "git status"
-          pwd
-          git status
-          echo "git add"
-          pwd
+          sed -i 's/title: "Enter Chatbot Title"/title: "My Title 2"/g' README.md
           git add .
-          echo "git commit"
-          pwd
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
-
-      - name: Print Cloned Directory Contents After Sync
-        run: |
-          pwd
-          ls -lR $RUNNER_TEMP/spaces
           
       - name: Push changes to Hugging Face Space
         env:
