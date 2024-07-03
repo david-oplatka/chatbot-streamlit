@@ -11,7 +11,19 @@ jobs:
 
     strategy:
       matrix:
-        space_name: [company-pet-policy, about-mls, shakespeare]  # List your Hugging Face space names here
+        include:
+          - space_name: company-pet-policy
+            space_title: "Vectara pet policy"
+            space_description: "Ask questions about our unique pet policy"
+
+          - space_name: about-mls
+            space_title: "About MLS"
+            space_description: "Ask questions from the MLS About section"
+
+          - space_name: shakespeare
+            space_title: "Shakespeare and His Plays"
+            space_description: "Ask some basic questions about Shakespeare's work"
+        
 
     steps:
       - name: Checkout Source Repository
@@ -43,7 +55,8 @@ jobs:
       - name: commit changes
         run: |
           cd $RUNNER_TEMP/spaces/${{ matrix.space_name }}
-          sed -i 's/title: "Enter Chatbot Title"/title: "My Title 2"/g' README.md
+          sed -i 's/title: "Enter Chatbot Title"/title: ${{ matrix.space_name }}/g' README.md
+          sed -i 's/short_description: "Enter Description Here"/short_description: ${{ matrix.space_name }}/g' README.md
           git add .
           git commit -m "Sync updates from source repository" || echo "No changes to commit"
           
