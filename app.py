@@ -4,10 +4,6 @@ import os
 
 import streamlit as st
 from PIL import Image
-from dotenv import load_dotenv
-
-
-load_dotenv(override=False)
 
 def isTrue(x) -> bool:
     if isinstance(x, bool):
@@ -90,4 +86,3 @@ def launch_bot():
     
 if __name__ == "__main__":
     launch_bot()
-    
